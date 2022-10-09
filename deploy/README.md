@@ -1,6 +1,5 @@
 # В данной директории все необходимое для развертывания СУБД и сервисов
 
-
 # Запуск
 ```bash
 docker-compose up -d
@@ -117,15 +116,69 @@ deploy/postgresql/data/*
 - Создается контейнер **postgresql** на базе образа postgres:12
 - К контейнеру монтируется volume **postgresql-data**
 - Пробрасываются порты, PostreSQL будет доступен по {MACHINE_IP}:5432, например: 192.168.1.50:5432.
-- Через переменнst окружения задается пользователь, название первичной базы данных и директория хранения данных внутри контейнера:
+- Через переменные окружения задается пользователь, название первичной базы данных и директория хранения данных внутри контейнера:
 ```bash
-      POSTGRES_PASSWORD: home-automation
-      POSTGRES_USER: home-automation
-      POSTGRES_DB: home-automation
-      PGDATA: /var/lib/postgresql/data/db-files/
+POSTGRES_PASSWORD: home-automation
+POSTGRES_USER: home-automation
+POSTGRES_DB: home-automation
+PGDATA: /var/lib/postgresql/data/db-files/
 ```
 
 Для тестирования подключения можно использовать утилиту psql или какой-либо GUI-клиент
 
 ## [Образ на Docker-хабе](https://hub.docker.com/_/postgres)
 ---
+
+# MySQL
+
+За развертывание MySQL отвечает следующая часть compose-файла:
+
+```bash
+volumes:
+  mysql-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./mysql/data
+services:
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_USER: home-automation
+      MYSQL_PASSWORD: home-automation
+      MYSQL_DATABASE: home-automation
+```
+
+В нем:
+
+- Создается диск (volume) с названием **mysql-data**, для хранения данных используется директория ./mysql/data. Рекомендуется добавить директорию в gitignore:
+
+```bash
+deploy/mysql/data/*
+!deploy/mysql/data/.gitkeep
+```
+- Создается контейнер **mysql** на базе образа postgres:12
+- К контейнеру монтируется volume **mysql-data**
+- Пробрасываются порты, MySQL будет доступен по {MACHINE_IP}:3306, например: 192.168.1.50:3306.
+- Через переменные окружения задается пользователь, название первичной базы данных:
+```bash
+MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+MYSQL_USER: home-automation
+MYSQL_PASSWORD: home-automation
+MYSQL_DATABASE: home-automation
+```
+
+Для тестирования подключения можно использовать утилиту mysql или какой-либо GUI-клиент
+## [Образ на Docker-хабе](https://hub.docker.com/_/mysql)
+
+# Memcached
+
+## [Образ на Docker-хабе](https://hub.docker.com/_/memcached)
+# SybaseIQ

@@ -5,3 +5,6 @@ deploy/mongo/data/*
 
 deploy/postgresql/data/*
 !deploy/postgresql/data/.gitkeep
+
+deploy/mysql/data/*
+!deploy/mysql/data/.gitkeep
