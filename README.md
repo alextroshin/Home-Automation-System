@@ -5,7 +5,7 @@
 - services - Директория содержит исходные коды сервисов системы
     - device-data-access-service - сервис доступа к данным устройств
     - device-data-analytics-service - сервис аналитики данных устройств
-    - device-management-service - сервис управления устройствами
+    - [device-management-service](/services/device-management-service) - сервис управления устройствами
     - policy-enforcement-service - сервис проверки полномочий
     - scripts-execution-service - сервис автоматизированного выполнения сценариев
     - telegram-communication-service - сервис взаимодействия с Telegram
