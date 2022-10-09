@@ -64,3 +64,7 @@
 ## Архитектура
 
 ![alt text](architecture.png "Architecture")
+
+
+## [Развертывание](/deploy/README.md)
+
