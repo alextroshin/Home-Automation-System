@@ -74,3 +74,58 @@ db.createUser(
 ```
 
 В нем создается пользователь с паролем и назначаются привелегии на запись в базу данных
+
+Для тестирования подключения можно использовать MongoDB Atlas или любой другой GUI-клиент
+
+## [Образ на Docker-хабе](https://hub.docker.com/_/mongo)
+---
+
+# PostgreSQL
+
+За развертывание PostgreSQL отвечает следующая часть compose-файла:
+
+```bash
+volumes:
+  postgresql-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./postgresql/data
+services:
+  postgresql:
+    image: postgres:12
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: home-automation
+      POSTGRES_USER: home-automation
+      POSTGRES_DB: home-automation
+      PGDATA: /var/lib/postgresql/data/db-files/
+    ports:
+      - 5432:5432
+```
+
+В нем:
+
+- Создается диск (volume) с названием **postgresql-data**, для хранения данных используется директория ./postgresql/data. Рекомендуется добавить директорию в gitignore:
+
+```bash
+deploy/postgresql/data/*
+!deploy/postgresql/data/.gitkeep
+```
+- Создается контейнер **postgresql** на базе образа postgres:12
+- К контейнеру монтируется volume **postgresql-data**
+- Пробрасываются порты, PostreSQL будет доступен по {MACHINE_IP}:5432, например: 192.168.1.50:5432.
+- Через переменнst окружения задается пользователь, название первичной базы данных и директория хранения данных внутри контейнера:
+```bash
+      POSTGRES_PASSWORD: home-automation
+      POSTGRES_USER: home-automation
+      POSTGRES_DB: home-automation
+      PGDATA: /var/lib/postgresql/data/db-files/
+```
+
+Для тестирования подключения можно использовать утилиту psql или какой-либо GUI-клиент
+
+## [Образ на Docker-хабе](https://hub.docker.com/_/postgres)
+---

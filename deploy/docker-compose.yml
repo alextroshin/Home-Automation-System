@@ -6,6 +6,12 @@ volumes:
       o: bind
       type: none
       device: ./mongo/data
+  postgresql-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./postgresql/data
 services:
   mongo:
     image: mongo:6.0
@@ -18,3 +24,14 @@ services:
       - "27019:27019"
     environment:
       - MONGO_INITDB_DATABASE=home-automation
+  postgresql:
+    image: postgres:12
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: home-automation
+      POSTGRES_USER: home-automation
+      POSTGRES_DB: home-automation
+      PGDATA: /var/lib/postgresql/data/db-files/
+    ports:
+      - 5432:5432
