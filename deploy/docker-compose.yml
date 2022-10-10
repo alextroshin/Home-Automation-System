@@ -53,3 +53,8 @@ services:
       MYSQL_USER: home-automation
       MYSQL_PASSWORD: home-automation
       MYSQL_DATABASE: home-automation
+  memcached:
+    image: memcached:1.6.17
+    ports:
+        - "11211:11211"
+    command: ["memcached"]

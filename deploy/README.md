@@ -173,7 +173,7 @@ services:
 deploy/mysql/data/*
 !deploy/mysql/data/.gitkeep
 ```
-- Создается контейнер **mysql** на базе образа postgres:12
+- Создается контейнер **mysql** на базе образа mysql:8
 - К контейнеру монтируется volume **mysql-data**
 - Пробрасываются порты, MySQL будет доступен по {MACHINE_IP}:3306, например: 192.168.1.50:3306.
 - Через переменные окружения задается пользователь, название первичной базы данных:
@@ -190,4 +190,30 @@ MYSQL_DATABASE: home-automation
 # Memcached
 
 ## [Образ на Docker-хабе](https://hub.docker.com/_/memcached)
+За развертывание Memcached отвечает следующая часть compose-файла:
+
+```bash
+memcached:
+  image: memcached:1.6.17
+  ports:
+      - "11211:11211"
+  command: ["memcached"]
+```
+
+В нем:
+
+- Создается контейнер **memcached** на базе образа memcached:1.6.17
+- Пробрасываются порты, Memcached будет доступен по {MACHINE_IP}:11211, например: 192.168.1.50:11211.
+
+Протестировать подключение можно прямо из Python:
+
+```bash
+>>> from pymemcache.client import base
+>>> client = base.Client(('192.168.1.50', 11211))
+>>> client.set('some_key', 'some value')
+True
+>>> client.get('some_key')
+b'some value'
+```
+
 # SybaseIQ
