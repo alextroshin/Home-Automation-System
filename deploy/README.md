@@ -13,6 +13,11 @@
 ```bash
 docker-compose up -d
 ```
+## Проверка статусов сервисов
+
+```bash
+docker ps --all --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
 
 # Остановка
 ```bash
@@ -189,7 +194,6 @@ MYSQL_DATABASE: home-automation
 
 # Memcached
 
-## [Образ на Docker-хабе](https://hub.docker.com/_/memcached)
 За развертывание Memcached отвечает следующая часть compose-файла:
 
 ```bash
@@ -215,5 +219,6 @@ True
 >>> client.get('some_key')
 b'some value'
 ```
+## [Образ на Docker-хабе](https://hub.docker.com/_/memcached)
 
 # SybaseIQ
