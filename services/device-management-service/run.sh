@@ -1,1 +1,1 @@
-uvicorn app:app --port 5000 --reload
+uvicorn app:app --port 5000 --reload --log-level debug

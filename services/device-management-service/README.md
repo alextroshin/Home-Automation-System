@@ -28,6 +28,30 @@ uvicorn app:app --port 5000 --reload
 ./run.sh
 ```
 
+# Запуск с использование файла конфигурации .env
+
+Для запуска из файла конфигурации нужно поместить файл .env в корень сервиса
+
+# Запуск с переопределением переменных окружения
+
+```bash
+uvicorn app:app --port 5000 --reload
+```
+
+или
+
+```bash
+export POSTGRES_DSN=postgresql://home-automation:home-automation@192.168.1.50:5432/home-automation
+uvicorn app:app --port 5000 --reload
+```
+
+# Конфигурация
+| Переменная    | Назначение                      | Значение по-умолчанию                        |
+| -----------   | -----                           | ---                                          |
+| POSTGRES_DSN  | Строка подключения к PostgreSQL | postgresql://user:pass@localhost:5432/foobar |
+| INT_EXAMPLE   | Пример целочисленной переменной | 5                                            | 
+| BOOL_EXAMPLE  | Пример булевой переменной       | False                                        | 
+
 # Документация
 
 После запуска доступна документация: http://127.0.0.1:5000/docs
@@ -39,6 +63,7 @@ uvicorn app:app --port 5000 --reload
 - Schemas - Реализует Pydantic-схемы сущностей приложения
 - Database - Реализует взаимодействией с базой данных - подключение к ней и sqalchemy-модели
 - CRUD - Реализует CRUD-методы для работы с сущностями сервиса
+- Config - Отвечает за подгрузку конфигурации
 
 
 ```mermaid
@@ -48,4 +73,5 @@ graph TD
     CRUD --> Database
     CRUD --> Schemas
     App --> Schemas
+    App --> Config
 ```

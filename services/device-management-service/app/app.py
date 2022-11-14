@@ -3,14 +3,35 @@ from fastapi.responses import JSONResponse
 from .schemas.device import Device, DeviceIn
 from .schemas.command import Command, Scene
 from sqlalchemy.orm import Session
-from .database import SessionLocal, engine, Base
-from . import crud
+from .database import DB_INITIALIZER
+from . import crud, config
 import typing
+import logging
+from fastapi.logger import logger
 
-Base.metadata.create_all(bind=engine)
+# setup logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=2,
+    format="%(levelname)-9s %(message)s"
+)
+
+# load config
+cfg: config.Config = config.load_config()
+
+logger.info(
+    'Service configuration loaded:\n' +
+    f'{cfg.json(by_alias=True, indent=4)}'
+)
+
+# init database
+logger.info('Initializing database...')
+SessionLocal = DB_INITIALIZER.init_database(cfg.postgres_dsn)
+
+
 
 app = FastAPI(
-    version='0.0.1',
+    version='0.0.2',
     title='Device Management Service'
 )
 
