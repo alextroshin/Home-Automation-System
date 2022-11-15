@@ -56,7 +56,10 @@ uvicorn app:app --port 5000 --reload
 
 После запуска доступна документация: http://127.0.0.1:5000/docs
 
-
+# Сборка образа
+```bash
+docker build -t home-automation/device-management-service:0.0.2 .
+```
 # Модули сервиса
 
 - App - Точка входа в приложение, реализует FastAPI-приложение соответсвии с требованиями
