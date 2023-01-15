@@ -9,7 +9,7 @@
     - policy-enforcement-service - сервис проверки полномочий
     - scripts-execution-service - сервис автоматизированного выполнения сценариев
     - telegram-communication-service - сервис взаимодействия с Telegram
-    - user-service - пользовательский сервис
+    - [user-service](/services/user-service) - пользовательский сервис
 
 ## Концепция
 

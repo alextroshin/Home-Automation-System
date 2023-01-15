@@ -1,0 +1,1 @@
+uvicorn app:app --port 5002 --reload --log-level debug
