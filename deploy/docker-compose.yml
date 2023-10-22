@@ -58,9 +58,23 @@ services:
     ports:
         - "11211:11211"
     command: ["memcached"]
-  device-management-serivce:
-    image: home-automation/device-management-service:0.0.2
+  device-management-service:
+    build:
+      context: ../services/device-management-service
+      dockerfile: ./Dockerfile
     ports:
-    - "5000:5000"
+    - "5001:5000"
     environment:
-      POSTGRES_DSN: postgresql://home-automation:home-automation@192.168.1.50:5432/home-automation
+      POSTGRES_DSN: postgresql://home-automation:home-automation@postgresql:5432/home-automation
+    depends_on:
+      - postgresql
+  user-service:
+    build:
+      context: ../services/user-service
+      dockerfile: ./Dockerfile
+    ports:
+    - "5002:5000"
+    environment:
+      POSTGRES_DSN: postgresql+asyncpg://home-automation:home-automation@postgresql:5432/home-automation
+    depends_on:
+      - postgresql
