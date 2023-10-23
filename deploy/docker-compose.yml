@@ -18,6 +18,12 @@ volumes:
       o: bind
       type: none
       device: ./mysql/data
+  policy-enforcement-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./policy-enforcement-service
 services:
   mongo:
     image: mongo:6.0
@@ -58,6 +64,17 @@ services:
     ports:
         - "11211:11211"
     command: ["memcached"]
+  policy-enforcement-service:
+    build:
+      context: ../services/policy-enforcement-service
+      dockerfile: ./Dockerfile
+    ports:
+    - "5000:5000"
+    volumes:
+      - policy-enforcement-data:/mnt/
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      POLICIES_CONFIG_PATH: ${POLICIES_CONFIG_PATH}
   device-management-service:
     build:
       context: ../services/device-management-service
@@ -65,7 +82,7 @@ services:
     ports:
     - "5001:5000"
     environment:
-      POSTGRES_DSN: postgresql://home-automation:home-automation@postgresql:5432/home-automation
+      POSTGRES_DSN: ${POSTGRES_DSN}
     depends_on:
       - postgresql
   user-service:
@@ -75,6 +92,9 @@ services:
     ports:
     - "5002:5000"
     environment:
-      POSTGRES_DSN: postgresql+asyncpg://home-automation:home-automation@postgresql:5432/home-automation
+      POSTGRES_DSN: ${POSTGRES_DSN_ASYNC}
+      JWT_SECRET: ${JWT_SECRET}
+      RESET_PASSWORD_TOKEN_SECRET: ${RESET_PASSWORD_TOKEN_SECRET}
+      VERIFICATION_TOKEN_SECRET: ${VERIFICATION_TOKEN_SECRET}
     depends_on:
       - postgresql

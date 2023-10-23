@@ -45,7 +45,8 @@ def get_db():
 
 @app.post(
     "/devices", status_code=201, response_model=Device,
-    summary='Добавляет устройство в базу'
+    summary='Добавляет устройство в базу',
+    tags=['devices']
 )
 async def add_device(device: DeviceIn, db: Session = Depends(get_db)) -> Device :
     return crud.create_device(db=db, device=device)
@@ -53,7 +54,8 @@ async def add_device(device: DeviceIn, db: Session = Depends(get_db)) -> Device 
 @app.get(
     "/devices",
     summary='Возвращает список устройств',
-    response_model=list[Device]
+    response_model=list[Device],
+    tags=['devices']
 )
 async def get_device_list(
         db: Session = Depends(get_db),
@@ -62,7 +64,7 @@ async def get_device_list(
     ) -> typing.List[Device] :
     return crud.get_devices(db, skip, limit)
 
-@app.get("/devices/{deviceId}", summary='Возвращает информацию об устройстве')
+@app.get("/devices/{deviceId}", summary='Возвращает информацию об устройстве', tags=['devices'])
 async def get_device_info(
         deviceId: int, db: Session = Depends(get_db)
     ) -> Device :
@@ -71,7 +73,7 @@ async def get_device_info(
         return device
     return JSONResponse(status_code=404, content={"message": "Item not found"})
 
-@app.put("/devices/{deviceId}", summary='Обновляет информацию об устройстве')
+@app.put("/devices/{deviceId}", summary='Обновляет информацию об устройстве', tags=['devices'])
 async def update_device(
         deviceId: int, 
         device: DeviceIn,
@@ -83,7 +85,7 @@ async def update_device(
         return device
     return JSONResponse(status_code=404, content={"message": "Item not found"})
 
-@app.delete("/devices/{deviceId}", summary='Удаляет устройство из базы')
+@app.delete("/devices/{deviceId}", summary='Удаляет устройство из базы', tags=['devices'])
 async def delete_device(
         deviceId: int, db: Session = Depends(get_db)
     ) -> Device :
@@ -91,10 +93,10 @@ async def delete_device(
         return JSONResponse(status_code=200, content={"message": "Item successfully deleted"})
     return JSONResponse(status_code=404, content={"message": "Item not found"})
 
-@app.get("/devices/{deviceId}/fetch", summary='Инициирует запрос актуальной информации с устройства')
+@app.get("/devices/{deviceId}/fetch", summary='Инициирует запрос актуальной информации с устройства', tags=['devices'])
 async def fetch_device_data(deviceId: int) -> Device :
     return JSONResponse(status_code=404, content={"message": "Item not found"})
 
-@app.post("/devices/{deviceId}/command", summary='Посылает команду на устройство')
+@app.post("/devices/{deviceId}/command", summary='Посылает команду на устройство', tags=['devices'])
 async def execute_device_command(deviceId: int, command: Command) -> Device :
     return JSONResponse(status_code=404, content={"message": "Item not found"})

@@ -1,0 +1,31 @@
+services:
+    - name: test-service
+      entrypoint: http://127.0.0.1:8082/
+      inject_token_in_swagger: True
+    - name: user-service
+      entrypoint: http://127.0.0.1:8000/
+model: |
+    [request_definition]
+    r = sub, obj, act
+    
+    [policy_definition]
+    p = sub_rule, obj, act
+    
+    [policy_effect]
+    e = some(where (p.eft == allow))
+    
+    [matchers]
+    m = eval(p.sub_rule) && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act)
+policies:
+    - service: test-service
+      rule: r.sub.age > -1 && r.sub.age < 60
+      resource: /some_url
+      methods: (GET)|(POST)
+    - service: test-service
+      resource: /data2
+      methods: (GET)|(POST)
+      rule: r.sub.age > 25 && r.sub.age < 35
+    - service: user-service
+      resource: /auth/*
+      methods: POST
+      white_list: true
