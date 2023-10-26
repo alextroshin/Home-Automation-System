@@ -11,7 +11,7 @@
 
 # Запуск
 ```bash
-docker-compose -p home-automation up -d
+docker-compose -p home-automation up -d --build
 ```
 ## Проверка статусов сервисов
 
