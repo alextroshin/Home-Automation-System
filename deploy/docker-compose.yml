@@ -25,6 +25,11 @@ volumes:
       type: none
       device: ./policy-enforcement-service
 services:
+  rabbitmq:
+    image: rabbitmq:3.12.8-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
   mongo:
     image: mongo:6.0
     volumes:
