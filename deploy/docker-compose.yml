@@ -49,8 +49,9 @@ services:
       - MONGO_INITDB_DATABASE=home-automation
   postgresql:
     image: postgres:12
-    volumes:
-      - postgresql-data:/var/lib/postgresql/data
+    # Uncomment, if required to use some specific PostgreQL configuration
+    # volumes:
+    #  - postgresql-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: home-automation
       POSTGRES_USER: home-automation
