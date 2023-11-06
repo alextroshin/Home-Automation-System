@@ -30,6 +30,12 @@ volumes:
       o: bind
       type: none
       device: ./user-service
+  e2e-test-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./e2e_test
 services:
   rabbitmq:
     image: rabbitmq:3.12.8-management-alpine
@@ -93,6 +99,9 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET}
       POLICIES_CONFIG_PATH: ${POLICIES_CONFIG_PATH}
+    depends_on:
+      - user-service
+      - device-management-service
   device-management-service:
     build:
       context: ../services/device-management-service
@@ -121,3 +130,12 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+  test-runner:
+    image: python:3.11
+    volumes:
+      - e2e-test-data:/mnt/
+    command: >
+      bash -c "pip install requests pydantic sqlalchemy psycopg2-binary
+      && python -m unittest /mnt/test.py"
+    depends_on:
+      - policy-enforcement-service
