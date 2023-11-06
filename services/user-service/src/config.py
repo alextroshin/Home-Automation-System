@@ -1,6 +1,6 @@
 import logging
 
-from pydantic import Field, PostgresDsn, SecretStr
+from pydantic import Field, PostgresDsn, SecretStr, FilePath
 from pydantic_settings import BaseSettings
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,12 @@ class Config(BaseSettings):
         default='verification_token_secret',
         env='VERIFICATION_TOKEN_SECRET',
         alias='VERIFICATION_TOKEN_SECRET'
+    )
+
+    default_groups_config_path: FilePath = Field(
+        default='default-groups.json',
+        env='DEFAULT_GROUPS_CONFIG_PATH',
+        alias='DEFAULT_GROUPS_CONFIG_PATH'
     )
 
     class Config:

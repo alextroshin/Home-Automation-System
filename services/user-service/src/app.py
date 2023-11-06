@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src import config, users
 
+import json
+
 # setup logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -85,3 +87,13 @@ async def on_startup():
     await users.database.initializer.init_database(
         app_config.postgres_dsn.unicode_string()
     )
+
+    groups = []
+    with open(app_config.default_groups_config_path) as f:
+        groups = json.load(f)
+
+    async for session in users.models.get_async_session():
+        for group in groups:
+            await users.groupcrud.upsert_group(
+                session, users.schemas.GroupUpsert(**group)
+            )
